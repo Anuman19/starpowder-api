@@ -5,7 +5,7 @@ import datetime
 
 def on_connect(client, userdata, flags, rc):
     client.subscribe("rooms/shedhalle", qos=0)
-    client.subscribe("rooms/shedahlle/humidity", qos=0)
+    client.subscribe("rooms/shedhalle/humidity", qos=0)
     
 
 def on_message(client, userdata, msg):
@@ -18,18 +18,22 @@ def on_message(client, userdata, msg):
             "time": str(timestamp),
             "celsius": float(msg_json["temperature"])
         }
-   
-    
+
     # INFLUXDB_CLIENT.write_points(body)
     print(msg_json["pressure"])
-    responseTemp = requests.post("http://127.0.0.1:8000/temp?newTemp="+str(msg_json["temperature"]), data={"test":"test"})
-    responsePressure = requests.post("http://127.0.0.1:8000/pressure?newPressure="+str(msg_json["pressure"]), data={"test":"test"})
-    responseHum = requests.post("http://127.0.0.1:8000/hum?newHum="+str(msg_json["humidity"]), data={"test":"test"})
+    #responseTemp = requests.post("http://127.0.0.1:8000/temp?newTemp="+str(msg_json["temperature"]), data={"test":"test"})
+    #responsePressure = requests.post("http://127.0.0.1:8000/pressure?newPressure="+str(msg_json["pressure"]), data={"test":"test"})
+    #responseHum = requests.post("http://127.0.0.1:8000/hum?newHum="+str(msg_json["humidity"]), data={"test":"test"})
+
+    print(requests.get('http://78.46.95.141:8000/temperature').content)
+    responseTemp = requests.post("http://78.46.95.141:8000/temperature?newTemp="+str(msg_json["temperature"]), data={"test":"test"})
+    responsePressure = requests.post("http://78.46.95.141:8000/pressure?newPressure="+str(msg_json["pressure"]), data={"test":"test"})
+    responseHum = requests.post("http://78.46.95.141:8000/humidity?newHum="+str(msg_json["humidity"]), data={"test":"test"})
 
     print(responseTemp)
     print(responsePressure)
     print(responseHum)
-    #requests.get('http://127.0.0.1:8000/')
+    # requests.get('http://127.0.0.1:8000/')
 
 
 MQTT_IP_ADDRESS = '127.0.0.1'

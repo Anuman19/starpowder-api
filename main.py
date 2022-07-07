@@ -1,44 +1,51 @@
-# main.py
-import paho.mqtt.client as mqtt
-import json
-import datetime
 from fastapi import FastAPI
-from pydantic import BaseModel
-import requests
+from fastapi.middleware.cors import CORSMiddleware
 
-temp = {
-    "celsius":"0",
-    "pressure":"0",
-    "humidity":"0"}
+env = {
+    "temperature": "0",
+    "pressure": "0",
+    "humidity": "0"}
 
 app = FastAPI()
 
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins="*",
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 @app.get("/")
 async def root():
-    return temp
+    return env
 
-@app.post("/temp")
+
+@app.post("/temperature")
 async def post_temp(newTemp: str):
-    temp["celsius"] = newTemp
+    env["temperature"] = newTemp
 
-@app.get("/temp")
+
+@app.get("/temperature")
 async def get_temp():
-    return temp
+    return env["temperature"]
 
-@app.post("/hum")
+
+@app.post("/humidity")
 async def post_hum(newHum: str):
-    temp["humidity"] = newHum
+    env["humidity"] = newHum
 
-@app.get("/hum")
+
+@app.get("/humidity")
 async def get_hum():
-    return temp["humidity"]
+    return env["humidity"]
+
 
 @app.post("/pressure")
 async def post_pressure(newPressure: str):
-    temp["pressure"] = newPressure
+    env["pressure"] = newPressure
+
 
 @app.get("/pressure")
 async def get_pressure():
-    return temp["pressure"]
-
+    return env["pressure"]
